@@ -1,0 +1,86 @@
+<head>
+  <title>Vue インスタンス</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+  <div id="app">
+    <p>{{ foo }}</p>
+    <!-- これは `foo` を更新しなくなります! -->
+    <button v-on:click="foo = 'baz'">Change it</button>
+  </div>
+
+  <div id="example">
+    <p>{{ a }}</p>
+    <!-- これは `foo` を更新しなくなります! -->
+    <button v-on:click="a += 1">Change it</button>
+  </div>
+
+  <img src="https://jp.vuejs.org/images/lifecycle.png" alt="vueのライフサイクルダイアグラム">
+</body>
+
+<script>
+// データオブジェクト
+var data = { a: 1 }
+
+// Vue インスタンスにオブジェクトを追加する
+var vm = new Vue({
+  data: data
+})
+
+// インスタンスのプロパティを取得すると、
+// 元のデータからそのプロパティが返されます
+vm.a == data.a // => true
+
+// プロパティへの代入は、元のデータにも反映されます
+vm.a = 2
+data.a // => 2
+
+// ... そして、その逆もまたしかりです
+data.a = 3
+vm.a // => 3
+
+var obj = {
+  foo: 'bar'
+}
+
+// feezeを呼ぶことによって、vueのリアクティブが追跡できない
+// Object.freeze(obj)
+
+new Vue({
+  el: '#app',
+  data: obj
+})
+
+var data = { a: 1 }
+var vm = new Vue({
+  el: '#example',
+  data: data
+})
+
+vm.$data === data // => true
+vm.$el === document.getElementById('example') // => true
+
+// $watch はインスタンスメソッドです
+vm.$watch('a', function (newValue, oldValue) {
+   // このコールバックは `vm.a` の値が変わる時に呼ばれます
+  console.log(`aの値が${vm.a}に変わったよ`);
+})
+
+new Vue({
+  data: {
+    a: 1
+  },
+  created: function () {
+    // `this` は vm インスタンスを指します
+    console.log('a is: ' + this.a)
+  }
+})
+// => "a is: 1"
+</script>
+
+<textarea name="" id="" cols="100" rows="10">
+
+dataのプロパティは、インスタンスが作成されたときに存在していた場合にのみリアクティブ
+
+</textarea>
